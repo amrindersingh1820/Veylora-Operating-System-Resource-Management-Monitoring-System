@@ -1,0 +1,61 @@
+================================================================================
+VIRTUAL OS SIMULATOR — ADVANCED TECHNICAL BENCHMARK REPORT
+================================================================================
+Application ID       : mac_facegate
+Display Name         : FaceGate
+Executable Path      : /Applications/FaceGate.app/Contents/MacOS/FaceGate
+Target Architecture  : Darwin arm64 / Alpine Linux ARM64 (QEMU HVF / Cgroups v2)
+Host System          : Apple Silicon M5 (Mach Kernel 24.2.0 Darwin arm64)
+Report Generated At  : 2026-11-11 08:48:28.437785
+Benchmark Suite      : VirtualOS Cgroup Performance Suite v1.1
+Hypervisor Mode      : Simulated Analytical Cgroup Model
+================================================================================
+
+--------------------------------------------------------------------------------
+1. SPECIFICATION & CGROUPS V2 RESOURCE ENVELOPES
+--------------------------------------------------------------------------------
+PARAMETER                    MINIMUM REQUIREMENTS         HIGH-END REQUIREMENTS
+--------------------------------------------------------------------------------
+Resource Profile             restricted (Tier-1 Min)      performance (Tier-3 Max)
+vCPU Limit (cpu.max)         0.50 Cores (50,000 us/100ms) 2.00 Cores (200,000 us/100ms)
+CFS Scheduler Weight         100                          200
+Memory Hard Cap (memory.max) 128.00 MB (134,217,728 B)    1024.00 MB (1,073,741,824 B)
+Process Concurrency (pids)   20 processes max             200 processes max
+Block I/O Bandwidth (io.max) 5.00 MB/s (5,242,880 B/s)    Unconstrained
+Virtual GPU Pass-Through     UNSUPPORTED (Strict Policy)  UNSUPPORTED (Strict Policy)
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+2. EMPIRICAL BENCHMARK METRICS
+--------------------------------------------------------------------------------
+METRIC                       MINIMUM REQUIREMENTS         HIGH-END REQUIREMENTS        COMPARISON / DELTA
+--------------------------------------------------------------------------------
+Elapsed Execution Time       1.40s                        0.70s                        2.00x Speedup (-74.4%)
+Mean CPU Utilization         48.9% (CFS Throttled)        85.4% (Multicore Burst)      +74.6% Throughput
+Peak Resident Memory (RSS)   88.2 MB                      146.5 MB                     Safety Cushion: +39.8 MB
+Memory Ceiling Headroom      39.8 MB (31.1% Free)         877.5 MB (85.7% Free)        Zero OOM Invocations
+CFS Quota Throttling Events  ACTIVE (Quota Capped)        NONE (Zero Latency Wait)     Throttling Eliminated
+Process Exit Status          EXIT_SUCCESS (Code 0)        EXIT_SUCCESS (Code 0)        POSIX Verified
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+3. SCHEDULER & SUBSYSTEM BOTTLENECK ANALYSIS
+--------------------------------------------------------------------------------
+* CPU CFS Throttling: Under Tier-1 constraints, the 50ms per 100ms CFS quota forced
+  intermittent thread pauses. Removing quota constraints in Tier-3 unlocked near-linear
+  parallel multicore speedup of 2.00x.
+* Memory & Virtual Memory: RSS peaked at 88.2 MB under constrained conditions, maintaining
+  a 31.1% buffer below the 128 MB threshold without invoking the kernel OOM killer.
+* Process Boundary Safety: Fork/clone activity complied with the 20 PID sandbox.
+
+--------------------------------------------------------------------------------
+4. DEPLOYMENT & PRODUCTION COMPLIANCE VERDICT
+--------------------------------------------------------------------------------
+FINAL VERDICT: [ PASSED — TIER 1 COMPATIBLE ]
+The application binary has been verified to meet POSIX lifecycle integrity,
+cgroup v2 isolation, and process identity standards. Recommended for both resource-limited
+envelopes and high-throughput environments.
+================================================================================
+Saved automatically to: /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/performance_report_technical_mac_facegate_2026-11-11T08-48-28.txt
+Virtual OS Simulator - Academic OS Engine & Hypervisor Management
+================================================================================

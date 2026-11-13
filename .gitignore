@@ -1,0 +1,57 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*~
+.cache/
+
+# IDE and Editor configurations
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Build artifacts & compiled binaries
+build/
+build_cmake/
+cmake-build-debug/
+*.o
+*.dylib
+*.so
+*.dll
+*.exe
+*.dSYM/
+virtual_os
+virtual_os_cli
+virtual_os_sdl
+virtual_os_sdl.exe
+virtual_os.exe
+virtual_os_cli.exe
+
+# Guest agent compiled binary & objects
+guest_agent/vos_guest_agent
+guest_agent/src/*.o
+
+# Large Virtual Machine Disk and ISO images (>100MB exceeds GitHub push limits)
+vm_images/*.iso
+vm_images/*.img
+
+# Temporary runtime logs, sockets, and databases
+*.log
+*.sock
+*.db-shm
+*.db-wal
+
+# Flutter & Dart outputs
+frontend/build/
+frontend/.dart_tool/
+frontend/.flutter-plugins-dependencies
+frontend/.pub-cache/
+frontend/.pub/
+frontend/macos/Flutter/ephemeral/

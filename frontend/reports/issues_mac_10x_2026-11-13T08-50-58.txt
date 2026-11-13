@@ -1,0 +1,46 @@
+================================================================================
+                  VEYLORA — PERFORMANCE ISSUES & REGRESSION REPORT
+================================================================================
+Application ID       : mac_10x
+Application Name     : 10x
+Report Name          : issues
+Scenario Evaluated   : Software Development (VS Code / Xcode)
+Historical Baseline  : Run #1 (2026-11-13 08:50:58)
+Current Evaluation   : 2026-11-13 08:50:58
+Evaluation Engine    : Veylora Dynamic Workload & Regression Detector
+Evaluation Status    : ✅ ZERO ISSUES DETECTED — 100% COMPLIANT WITH HISTORICAL BASELINE
+================================================================================
+
+--------------------------------------------------------------------------------
+1. COMPLIANCE ASSESSMENT
+--------------------------------------------------------------------------------
+No performance regressions or abnormal memory leaks were discovered.
+All empirical telemetry values fell strictly within the approved ±15% operational
+envelope relative to past sessions. The application continues to demonstrate
+high stability and efficient cgroup resource containment.
+
+--------------------------------------------------------------------------------
+2. HISTORICAL COMPARISON MATRIX (OLD DATA vs NEW DATA)
+--------------------------------------------------------------------------------
+METRIC                   BASELINE (OLD DATA)    CURRENT (NEW DATA)     DELTA / SHIFT
+--------------------------------------------------------------------------------
+Peak Memory (RAM)        133 MB                 133 MB                 -0 MB
+RAM Delta (Cache)        +25 MB                 +25 MB                 -0 MB
+Average CPU Utilization  24.2%                  24.2%                  -0.0%
+Peak CPU Burst           89.5%                  89.5%                  -0.0%
+High-Stress Spikes       3 spikes               3 spikes               +0
+Session Duration         N/A (Variable Workload)23s (0m 23s)            Monitored
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+3. SUMMARY REMEDIATION CHECKLIST
+--------------------------------------------------------------------------------
+1. Memory Leaks: Verify layer buffer release upon closing photo documents.
+2. Scratch Storage: Monitor NVMe write caches to avoid premature SSD wear.
+3. CPU Spikes: Stagger complex AI neural filter inferences where feasible.
+
+================================================================================
+Primary Report File  : /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/issues.txt
+Historical Archive   : /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/issues_mac_10x_2026-11-13T08-50-58.txt
+Veylora — Creative OS Hypervisor & Architecture Engine (v1.6 Pro)
+================================================================================

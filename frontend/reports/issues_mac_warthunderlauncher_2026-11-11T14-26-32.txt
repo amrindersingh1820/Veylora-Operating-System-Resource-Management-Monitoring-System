@@ -1,0 +1,35 @@
+================================================================================
+                  VEYLORA — PERFORMANCE ISSUES & REGRESSION REPORT
+================================================================================
+Application ID       : mac_warthunderlauncher
+Application Name     : WarThunderLauncher
+Report Name          : issues
+Scenario Evaluated   : Dual-Profile Cgroup Benchmark
+Historical Baseline  : Run #1 (2026-11-11 14:26:32)
+Current Evaluation   : 2026-11-11 14:26:32
+Evaluation Engine    : Veylora Dynamic Benchmark Regression Detector
+Evaluation Status    : ✅ ZERO ISSUES DETECTED — 100% COMPLIANT WITH HISTORICAL BASELINE
+================================================================================
+
+--------------------------------------------------------------------------------
+1. COMPLIANCE ASSESSMENT
+--------------------------------------------------------------------------------
+Zero benchmark regressions discovered.
+Execution speedups and CFS quota compliance match or exceed historical baselines.
+The binary satisfies POSIX isolation and cgroup scaling requirements.
+
+--------------------------------------------------------------------------------
+2. HISTORICAL COMPARISON MATRIX (OLD DATA vs NEW DATA)
+--------------------------------------------------------------------------------
+METRIC                   BASELINE (OLD DATA)    CURRENT (NEW DATA)     DELTA / SHIFT
+--------------------------------------------------------------------------------
+Minimum Spec Runtime     1.40s                  1.40s                  +0.00s
+High-End Spec Runtime    0.70s                  0.70s                  +0.00s
+Speedup Factor           2.00x                  2.00x                  +0.00x
+--------------------------------------------------------------------------------
+
+================================================================================
+Primary Report File  : /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/issues.txt
+Historical Archive   : /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/issues_mac_warthunderlauncher_2026-11-11T14-26-32.txt
+Veylora — Creative OS Hypervisor & Architecture Engine (v1.6 Pro)
+================================================================================

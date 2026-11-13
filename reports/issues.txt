@@ -1,0 +1,43 @@
+================================================================================
+                  VEYLORA — PERFORMANCE ISSUES & REGRESSION REPORT
+================================================================================
+Application ID       : system_baseline
+Application Name     : Veylora Performance Baseline Monitor
+Report Name          : issues
+Scenario Evaluated   : Real-World Workload & Benchmark Baseline Engine
+Current Evaluation   : 2026-11-11 10:59:00
+Evaluation Engine    : Veylora Dynamic Workload & Regression Detector
+Evaluation Status    : ✅ ZERO ISSUES DETECTED — SYSTEM CALIBRATED & READY
+================================================================================
+
+--------------------------------------------------------------------------------
+1. COMPLIANCE ASSESSMENT
+--------------------------------------------------------------------------------
+The historical regression detection engine has been initialized.
+Every time you test an application (via live photo editing/interactive sessions
+or dual-profile benchmarks), Veylora automatically:
+  1. Stores full telemetry metrics into SQLite WAL database (application_events).
+  2. Compares the current run against all previous runs for that application.
+  3. Detects memory leaks (>25% RAM growth or >250 MB surge), CPU saturation,
+     and scheduling latency.
+  4. If any regression is detected, a dedicated report is generated and saved
+     directly to this file (reports/issues.txt) and archived per test run.
+
+--------------------------------------------------------------------------------
+2. MONITORED SAFETY & PERFORMANCE THRESHOLDS
+--------------------------------------------------------------------------------
+METRIC                   BASELINE SAFETY THRESHOLD    REGRESSION TRIGGER
+--------------------------------------------------------------------------------
+Peak Memory (RAM)        < 3072 MB safe headroom      > +25% or > +250 MB surge
+RAM Delta (Cache)        < 500 MB history buffer      > +500 MB unpurged cache
+Mean CPU Load            < 45.0% interactive average  > +15.0% unexplained surge
+Burst Spikes (>70%)      < 3 high-stress bursts       >= 3 additional bursts
+CFS Throttling Time      Exit Code 0                  > 30% execution slowdown
+--------------------------------------------------------------------------------
+
+================================================================================
+Primary Report File  : reports/issues.txt
+Product Name         : Veylora
+Architecture Engine  : Veylora Hypervisor & Virtualization Engine (v1.6 Pro)
+================================================================================
+

@@ -1,0 +1,262 @@
+UEFI firmware (version edk2-stable202408-prebuilt.qemu.org built at 16:28:50 on Sep 12 2024)
+ArmTrngLib could not be correctly initialized.
+Error: Image at 0007FDB6000 start failed: 00000001
+Error: Image at 0007FD6D000 start failed: Not Found
+Error: Image at 0007FCBA000 start failed: Unsupported
+Error: Image at 0007FC3F000 start failed: Not Found
+Error: Image at 0007FB65000 start failed: Aborted
+Tpm2SubmitCommand - Tcg2 - Not Found
+Tpm2GetCapabilityPcrs fail!
+Tpm2SubmitCommand - Tcg2 - Not Found
+Image type X64 can't be loaded on AARCH64 UEFI system.
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI Misc Device" from PciRoot(0x0)/Pci(0x2,0x0)
+BdsDxe: starting Boot0001 "UEFI Misc Device" from PciRoot(0x0)/Pci(0x2,0x0)
+[0m[30m[40m[2J[01;01H[0m[37m[40m[02;30HGNU GRUB  version 2.12
+
+[04;02H/----------------------------------------------------------------------------\[05;02H|[05;79H|[06;02H|[06;79H|[07;02H|[07;79H|[08;02H|[08;79H|[09;02H|[09;79H|[10;02H|[10;79H|[11;02H|[11;79H|[12;02H|[12;79H|[13;02H|[13;79H|[14;02H|[14;79H|[15;02H|[15;79H|[16;02H|[16;79H|[17;02H|[17;79H|[18;02H|[18;79H|[19;02H|[19;79H|[20;02H|[20;79H|[21;02H|[21;79H|[22;02H|[22;79H|[23;02H|[23;79H|[24;02H|[24;79H|[25;02H|[25;79H|[26;02H|[26;79H|[27;02H|[27;79H|[28;02H|[28;79H|[29;02H|[29;79H|[30;02H|[30;79H|[31;02H|[31;79H|[32;02H|[32;79H|[33;02H|[33;79H|[34;02H|[34;79H|[35;02H|[35;79H|[36;02H|[36;79H|[37;02H|[37;79H|[38;02H|[38;79H|[39;02H|[39;79H|[40;02H|[40;79H|[41;02H|[41;79H|[42;02H|[42;79H|[43;02H\----------------------------------------------------------------------------/[44;02H[45;02H     Use the ^ and v keys to select which entry is highlighted.          
+      Press enter to boot the selected OS, `e' to edit the commands       
+      before booting or `c' for a command-line.                           [05;80H [0m[30m[47m[05;03H*Linux lts                                                                  [0m[37m[40m[05;78H[06;03H                                                                            [06;78H[07;03H                                                                            [07;78H[08;03H                                                                            [08;78H[09;03H                                                                            [09;78H[10;03H                                                                            [10;78H[11;03H                                                                            [11;78H[12;03H                                                                            [12;78H[13;03H                                                                            [13;78H[14;03H                                                                            [14;78H[15;03H                                                                            [15;78H[16;03H                                                                            [16;78H[17;03H                                                                            [17;78H[18;03H                                                                            [18;78H[19;03H                                                                            [19;78H[20;03H                                                                            [20;78H[21;03H                                                                            [21;78H[22;03H                                                                            [22;78H[23;03H                                                                            [23;78H[24;03H                                                                            [24;78H[25;03H                                                                            [25;78H[26;03H                                                                            [26;78H[27;03H                                                                            [27;78H[28;03H                                                                            [28;78H[29;03H                                                                            [29;78H[30;03H                                                                            [30;78H[31;03H                                                                            [31;78H[32;03H                                                                            [32;78H[33;03H                                                                            [33;78H[34;03H                                                                            [34;78H[35;03H                                                                            [35;78H[36;03H                                                                            [36;78H[37;03H                                                                            [37;78H[38;03H                                                                            [38;78H[39;03H                                                                            [39;78H[40;03H                                                                            [40;78H[41;03H                                                                            [41;78H[42;03H                                                                            [42;78H[42;80H [05;78H[48;01H   The highlighted entry will be executed automatically in 1s.                 [05;78H[48;01H   The highlighted entry will be executed automatically in 0s.                 [05;78H[0m[30m[40m[2J[01;01H[0m[37m[40m[0m[30m[40m[2J[01;01H[0m[37m[40m  Booting `Linux lts'
+
+7  0%                                             8[0K7  4% ##                                          8[0K7 10% ####                                        8[0K7 11% ####                                        8[0K7 11% #####                                       8[0K7 13% #####                                       8[0K7 13% ######                                      8[0K7 14% ######                                      8[0K7 15% ######                                      8[0K7 15% #######                                     8[0K7 16% #######                                     8[0K7 17% #######                                     8[0K7 18% ########                                    8[0K7 19% ########                                    8[0K7 20% ########                                    8[0K7 20% #########                                   8[0K7 21% #########                                   8[0K7 22% #########                                   8[0K7 23% ##########                                  8[0K7 24% ##########                                  8[0K7 25% ###########                                 8[0K7 26% ###########                                 8[0K7 27% ############                                8[0K7 28% ############                                8[0K7 29% ############                                8[0K7 29% #############                               8[0K7 30% #############                               8[0K7 31% #############                               8[0K7 32% ##############                              8[0K7 33% ##############                              8[0K7 34% ###############                             8[0K7 35% ###############                             8[0K7 36% ###############                             8[0K7 36% ################                            8[0K7 37% ################                            8[0K7 38% ################                            8[0K7 38% #################                           8[0K7 39% #################                           8[0K7 40% #################                           8[0K7 40% ##################                          8[0K7 41% ##################                          8[0K7 42% ##################                          8[0K7 43% ##################                          8[0K7 43% ###################                         8[0K7 44% ###################                         8[0K7 45% ###################                         8[0K7 45% ####################                        8[0K7 46% ####################                        8[0K7 47% ####################                        8[0K7 47% #####################                       8[0K7 49% #####################                       8[0K7 62% ###########################                 8[0K7 75% #################################           8[0K7 77% ##################################          8[0K7 78% ##################################          8[0K7 79% ##################################          8[0K7 80% ###################################         8[0K7 86% #####################################       8[0K7 86% ######################################      8[0K7 87% ######################################      8[0K7 88% #######################################     8[0K7 90% #######################################     8[0K7 90% ########################################    8[0K7 91% ########################################    8[0K7 92% ########################################    8[0K7 93% #########################################   8[0K7 94% #########################################   8[0K7100% ############################################8[0K
+
+   OpenRC 0.54 is starting up Linux 6.6.31-0-lts (aarch64)
+
+ * /proc is already mounted
+ * Mounting /run ... [ ok ]
+ * /run/openrc: creating directory
+ * /run/lock: creating directory
+ * /run/lock: correcting owner
+ * Caching service dependencies ... [ ok ]
+ * Remounting devtmpfs on /dev ... [ ok ]
+ * Mounting /dev/mqueue ... [ ok ]
+ * Mounting modloop  ... * Verifying modloop
+ [ ok ]
+ * Mounting security filesystem ... [ ok ]
+ * Mounting debug filesystem ... [ ok ]
+ * Mounting persistent storage (pstore) filesystem ... [ ok ]
+ * Mounting efivarfs filesystem ... [ ok ]
+ * Starting busybox mdev ... [ ok ]
+ * Scanning hardware for mdev ... [ ok ]
+ * Loading hardware drivers ... [ ok ]
+ * Loading modules ... [ ok ]
+ * Setting system clock using the hardware clock [UTC] ... [ ok ]
+ * Checking local filesystems  ... [ ok ]
+ * Remounting filesystems ... [ ok ]
+ * Mounting local filesystems ... [ ok ]
+ * Configuring kernel parameters ... [ ok ]
+ * Migrating /var/lock to /run/lock ... [ ok ]
+ * Creating user login records ... [ ok ]
+ * Cleaning /tmp directory ... [ ok ]
+ * Setting hostname ... [ ok ]
+ * Starting busybox syslog ... [ ok ]
+ * Starting firstboot ... [ ok ]
+
+Welcome to Alpine Linux 3.20
+Kernel 6.6.31-0-lts on an aarch64 (/dev/ttyAMA0)
+
+localhost login: root
+Welcome to Alpine!
+
+The Alpine Wiki contains a large amount of how-to guides and general
+information about administrating Alpine systems.
+See <https://wiki.alpinelinux.org/>.
+
+You can setup the system with the command: setup-alpine
+
+You may change this message by editing /etc/motd.
+
+localhost:~# [6n
+localhost:~# echo '=== RAW_UNAME_START ===' && uname -a && echo '=== RAW_UNAME_E
+ND ==='
+=== RAW_UNAME_START ===
+Linux localhost 6.6.31-0-lts #1-Alpine SMP PREEMPT_DYNAMIC Fri, 17 May 2024 11:04:37 +0000 aarch64 Linux
+=== RAW_UNAME_END ===
+localhost:~# echo '=== RAW_CPUINFO_START ===' && cat /proc/cpuinfo && echo '=== 
+RAW_CPUINFO_END ==='
+=== RAW_CPUINFO_START ===
+processor	: 0
+BogoMIPS	: 48.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 bti afp rpres sme smei16i64 smef64f64 smei8i32 smef16f32 smeb16f32 smef32f32 ebf16 sveebf16 sme2 sme2p1 smei16i32 smebi32i32 smeb16b16 smef16f16
+CPU implementer	: 0x61
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0x000
+CPU revision	: 0
+
+processor	: 1
+BogoMIPS	: 48.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 bti afp rpres sme smei16i64 smef64f64 smei8i32 smef16f32 smeb16f32 smef32f32 ebf16 sveebf16 sme2 sme2p1 smei16i32 smebi32i32 smeb16b16 smef16f16
+CPU implementer	: 0x61
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0x000
+CPU revision	: 0
+
+=== RAW_CPUINFO_END ===
+localhost:~# echo '=== RAW_STAT_1_START ===' && head -n 10 /proc/stat && echo '=
+== RAW_STAT_1_END ==='
+=== RAW_STAT_1_START ===
+cpu  29 0 83 299 0 1 0 0 0 0
+cpu0 11 0 29 165 0 1 0 0 0 0
+cpu1 17 0 53 134 0 0 0 0 0 0
+intr 5065 0 1089 1955 0 0 0 0 0 0 0 711 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 177 1131 0 0 0 0 0 0 0
+ctxt 9996
+btime 1793620523
+processes 2292
+procs_running 1
+procs_blocked 0
+softirq 14345 0 215 0 0 51 0 1 413 0 13665
+=== RAW_STAT_1_END ===
+localhost:~# sleep 2
+localhost:~# echo '=== RAW_STAT_2_START ===' && head -n 10 /proc/stat && echo '=
+== RAW_STAT_2_END ==='
+=== RAW_STAT_2_START ===
+cpu  29 0 84 700 0 1 0 0 0 0
+cpu0 11 0 30 365 0 1 0 0 0 0
+cpu1 17 0 54 334 0 0 0 0 0 0
+intr 5128 0 1091 1962 0 0 0 0 0 0 0 765 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 177 1131 0 0 0 0 0 0 0
+ctxt 10073
+btime 1793620523
+processes 2294
+procs_running 1
+procs_blocked 0
+softirq 14427 0 244 0 0 51 0 1 451 0 13680
+=== RAW_STAT_2_END ===
+localhost:~# echo '=== RAW_MEMINFO_START ===' && head -n 20 /proc/meminfo && ech
+o '=== RAW_MEMINFO_END ==='
+=== RAW_MEMINFO_START ===
+MemTotal:         922736 kB
+MemFree:          707776 kB
+MemAvailable:     798588 kB
+Buffers:             128 kB
+Cached:           157336 kB
+SwapCached:            0 kB
+Active:            15876 kB
+Inactive:         142168 kB
+Active(anon):      15876 kB
+Inactive(anon):        0 kB
+Active(file):          0 kB
+Inactive(file):   142168 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Zswap:                 0 kB
+Zswapped:              0 kB
+Dirty:                 0 kB
+Writeback:             0 kB
+=== RAW_MEMINFO_END ===
+localhost:~# echo '=== RAW_DISKSTATS_START ===' && cat /proc/diskstats && echo '
+=== RAW_DISKSTATS_END ==='
+=== RAW_DISKSTATS_START ===
+   1       0 ram0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       1 ram1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       2 ram2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       3 ram3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       4 ram4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       5 ram5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       6 ram6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       7 ram7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       8 ram8 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1       9 ram9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1      10 ram10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1      11 ram11 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1      12 ram12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1      13 ram13 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1      14 ram14 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   1      15 ram15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   7       0 loop0 51 0 1184 0 0 0 0 0 0 77 0 0 0 0 0 0 0
+   7       1 loop1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   7       2 loop2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   7       3 loop3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   7       4 loop4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   7       5 loop5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   7       6 loop6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+   7       7 loop7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 253       0 vda 1334 0 286782 58 0 0 0 0 0 214 58 0 0 0 0 0 0
+ 253       1 vda1 35 0 2008 1 0 0 0 0 0 20 1 0 0 0 0 0 0
+ 253       2 vda2 28 0 1024 1 0 0 0 0 0 17 1 0 0 0 0 0 0
+ 253       3 vda3 47 0 4072 1 0 0 0 0 0 17 1 0 0 0 0 0 0
+=== RAW_DISKSTATS_END ===
+localhost:~# echo '=== RAW_NETDEV_START ===' && cat /proc/net/dev && echo '=== R
+AW_NETDEV_END ==='
+=== RAW_NETDEV_START ===
+Inter-|   Receive                                                |  Transmit
+ face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+    lo:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+  eth0:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+=== RAW_NETDEV_END ===
+localhost:~# echo '=== RAW_PROCS_START ===' && ps -o pid,ppid,comm,vsz,rss && ec
+ho '=== RAW_PROCS_END ==='
+=== RAW_PROCS_START ===
+PID   PPID  COMMAND          VSZ  RSS
+    1     0 init             1704  768
+    2     0 kthreadd            0    0
+    3     2 pool_workqueue_     0    0
+    4     2 kworker/R-rcu_g     0    0
+    5     2 kworker/R-rcu_p     0    0
+    6     2 kworker/R-slub_     0    0
+    7     2 kworker/R-netns     0    0
+    8     2 kworker/0:0-eve     0    0
+    9     2 kworker/0:0H-ev     0    0
+   10     2 kworker/0:1-pm      0    0
+   11     2 kworker/u4:0-ev     0    0
+   12     2 kworker/R-mm_pe     0    0
+   13     2 kworker/u4:1-ev     0    0
+   14     2 rcu_tasks_kthre     0    0
+   15     2 rcu_tasks_rude_     0    0
+   16     2 rcu_tasks_trace     0    0
+   17     2 ksoftirqd/0         0    0
+   18     2 rcu_preempt         0    0
+   19     2 migration/0         0    0
+   20     2 cpuhp/0             0    0
+   21     2 cpuhp/1             0    0
+   22     2 migration/1         0    0
+   23     2 ksoftirqd/1         0    0
+   24     2 kworker/1:0-eve     0    0
+   25     2 kworker/1:0H-kb     0    0
+   26     2 kdevtmpfs           0    0
+   27     2 kworker/R-inet_     0    0
+   28     2 kauditd             0    0
+   29     2 oom_reaper          0    0
+   30     2 kworker/R-write     0    0
+   31     2 kcompactd0          0    0
+   32     2 ksmd                0    0
+   33     2 khugepaged          0    0
+   34     2 kworker/R-kinte     0    0
+   35     2 kworker/R-kbloc     0    0
+   36     2 kworker/R-blkcg     0    0
+   37     2 kworker/R-md        0    0
+   38     2 kworker/R-md_bi     0    0
+   39     2 kworker/R-edac-     0    0
+   40     2 kworker/R-devfr     0    0
+   41     2 watchdogd           0    0
+   42     2 kworker/1:1H        0    0
+   43     2 kworker/1:1-eve     0    0
+   44     2 kworker/u4:2-ev     0    0
+   45     2 kswapd0             0    0
+   46     2 kworker/R-kthro     0    0
+   87     2 irq/49-ACPI:Ged     0    0
+   89     2 kworker/u4:3-ev     0    0
+  431     2 kworker/R-mld       0    0
+  432     2 kworker/0:1H-kb     0    0
+  433     2 kworker/R-ipv6_     0    0
+  440     2 kworker/R-kstrp     0    0
+  662     2 kworker/u5:0        0    0
+  698     2 kworker/1:2-eve     0    0
+ 1357     2 kworker/0:2         0    0
+ 2232     1 syslogd          1720  896
+ 2266     1 getty            1704  896
+ 2267     1 getty            1704  896
+ 2271     1 getty            1704  896
+ 2275     1 getty            1704  896
+ 2276     1 getty            1704  896
+ 2283     1 getty            1704  896
+ 2287     1 login            1704  768
+ 2288  2287 sh               1792 1152
+ 2297  2288 ps               1712  896
+=== RAW_PROCS_END ===
+localhost:~# echo '=== LIVE_PROBE_COMPLETE ==='
+=== LIVE_PROBE_COMPLETE ===
+localhost:~# poweroff
+localhost:~# [6n * Stopping busybox syslog ...

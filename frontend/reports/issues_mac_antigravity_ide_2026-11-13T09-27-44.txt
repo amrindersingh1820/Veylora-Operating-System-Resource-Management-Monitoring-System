@@ -1,0 +1,46 @@
+================================================================================
+                  VEYLORA — PERFORMANCE ISSUES & REGRESSION REPORT
+================================================================================
+Application ID       : mac_antigravity_ide
+Application Name     : Antigravity IDE
+Report Name          : issues
+Scenario Evaluated   : Software Development (VS Code / Xcode)
+Historical Baseline  : Run #1 (2026-11-13 09:27:44)
+Current Evaluation   : 2026-11-13 09:27:44
+Evaluation Engine    : Veylora Dynamic Workload & Regression Detector
+Evaluation Status    : ✅ ZERO ISSUES DETECTED — 100% COMPLIANT WITH HISTORICAL BASELINE
+================================================================================
+
+--------------------------------------------------------------------------------
+1. COMPLIANCE ASSESSMENT
+--------------------------------------------------------------------------------
+No performance regressions or abnormal memory leaks were discovered.
+All empirical telemetry values fell strictly within the approved ±15% operational
+envelope relative to past sessions. The application continues to demonstrate
+high stability and efficient cgroup resource containment.
+
+--------------------------------------------------------------------------------
+2. HISTORICAL COMPARISON MATRIX (OLD DATA vs NEW DATA)
+--------------------------------------------------------------------------------
+METRIC                   BASELINE (OLD DATA)    CURRENT (NEW DATA)     DELTA / SHIFT
+--------------------------------------------------------------------------------
+Peak Memory (RAM)        5 MB                   5 MB                   +0 MB
+RAM Delta (Cache)        +0 MB                  +0 MB                  +0 MB
+Average CPU Utilization  14.8%                  14.8%                  +0.0%
+Peak CPU Burst           16.5%                  16.5%                  +0.0%
+High-Stress Spikes       0 spikes               0 spikes               +0
+Session Duration         N/A (Variable Workload)3s (0m 3s)              Monitored
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+3. SUMMARY REMEDIATION CHECKLIST
+--------------------------------------------------------------------------------
+1. Memory Leaks: Verify layer buffer release upon closing photo documents.
+2. Scratch Storage: Monitor NVMe write caches to avoid premature SSD wear.
+3. CPU Spikes: Stagger complex AI neural filter inferences where feasible.
+
+================================================================================
+Primary Report File  : /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/issues.txt
+Historical Archive   : /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/issues_mac_antigravity_ide_2026-11-13T09-27-44.txt
+Veylora — Creative OS Hypervisor & Architecture Engine (v1.6 Pro)
+================================================================================

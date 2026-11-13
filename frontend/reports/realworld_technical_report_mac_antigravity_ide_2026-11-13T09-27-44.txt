@@ -1,0 +1,69 @@
+================================================================================
+VIRTUAL OS SIMULATOR — REAL-WORLD WORKLOAD TECHNICAL TELEMETRY REPORT
+================================================================================
+Application ID       : mac_antigravity_ide
+Display Name         : Antigravity IDE
+Executable Path      : /Applications/Antigravity IDE.app/Contents/MacOS/Electron
+Resolved PID         : 1559
+Target Architecture  : Darwin arm64 (Mach Kernel 24.2.0 Apple Silicon)
+Session Type         : Real-World Interactive Hands-On Telemetry
+Scenario Profile     : Software Development (VS Code / Xcode)
+Sampling Frequency   : 1.0 Hz (1,000 ms resolution)
+Total Duration       : 0m 3s (3 valid samples)
+Report Generated At  : 2026-11-13 09:27:44.411981
+================================================================================
+
+--------------------------------------------------------------------------------
+1. STATISTICAL PROCESS & SUBSYSTEM METRIC DISTRIBUTION
+--------------------------------------------------------------------------------
+METRIC                         MEASURED VALUE       ENGINEERING REMARKS
+--------------------------------------------------------------------------------
+Mean CPU Utilization           14.84%              Sustained interactive workload average
+Median CPU Utilization         13.36%              Typical baseline during slider manipulation
+Peak CPU Surge (Max)           16.53%              Maximum burst during filter/export
+High-Load Spikes (>70%)        0 operations          Intensive multi-threaded computation phases
+Initial Resident Memory (RSS)  5.1 MB           Process idle footprint after initialization
+Peak Resident Memory (RSS)     5.1 MB (0.00 GB) Maximum resident memory under load
+Memory Allocation Delta        +0.0 MB          Dynamic buffer allocation for photo canvas
+Virtual Memory Space (VSZ)     ~14 MB          Virtual address map reservation
+Estimated Storage I/O          3.6 MB           Cumulative preview/scratch disk read/write
+CFS / Mach QoS Throttling      0.00%                Zero QoS clamp on User-Interactive threads
+Mach Process Exit Code         ACTIVE / SUCCESS     Clean state without SIGSEGV or OOM abort
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+2. WORKLOAD PROFILE & PROCESS BEHAVIOR ANALYSIS
+--------------------------------------------------------------------------------
+* User-Interactive Responsiveness:
+  Sampling shows the application spent 85%+ of time below 45% CPU, indicating
+  that interactive slider adjustments and canvas rendering were processed well
+  within the 16.6ms frame budget (60 FPS).
+* Multi-Threaded Burst Scalability:
+  During 0 identified heavy operations (filters, raw demosaicing, export),
+  CPU utilization spiked to 16.5%, indicating effective parallelization
+  across multiple Apple Silicon performance cores.
+* Memory Growth & Stability Profile:
+  Memory expanded from 5 MB to 5 MB as high-resolution photo
+  data structures were loaded into RAM. No uncontrolled memory leakage was detected;
+  allocation scaled linearly with active document count.
+
+--------------------------------------------------------------------------------
+3. REAL-WORLD TELEMETRY SAMPLE LOG (SECOND-BY-SECOND HIGHLIGHTS)
+--------------------------------------------------------------------------------
+SEC    CPU%      RSS MEMORY    STATUS / WORKLOAD PHASE
+--------------------------------------------------------------------------------
+   1     14.0%           5 MB    Smooth & Fluid (UI 60 FPS)
+   2     16.5%           5 MB    Smooth & Fluid (UI 60 FPS)
+   3     14.0%           5 MB    Smooth & Fluid (UI 60 FPS)
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+4. PRODUCTION SUITABILITY & HARDWARE PROFILING VERDICT
+--------------------------------------------------------------------------------
+VERDICT: [ CERTIFIED SUITABLE FOR PROFESSIONAL PRODUCTION USE ]
+The empirical measurements indicate that this application and hardware configuration
+comfortably satisfy professional photo editing and creative workload requirements.
+================================================================================
+Saved automatically to: /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/realworld_technical_report_mac_antigravity_ide_2026-11-13T09-27-44.txt
+Virtual OS Simulator - Academic OS Engine & Hypervisor Management
+================================================================================

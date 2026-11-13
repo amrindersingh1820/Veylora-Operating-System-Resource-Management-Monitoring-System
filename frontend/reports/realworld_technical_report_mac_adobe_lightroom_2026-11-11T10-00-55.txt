@@ -1,0 +1,74 @@
+================================================================================
+VIRTUAL OS SIMULATOR — REAL-WORLD WORKLOAD TECHNICAL TELEMETRY REPORT
+================================================================================
+Application ID       : mac_adobe_lightroom
+Display Name         : Adobe Lightroom
+Executable Path      : /Applications/Adobe Lightroom CC/Adobe Lightroom.app/Contents/MacOS/Adobe Lightroom
+Resolved PID         : 99776
+Target Architecture  : Darwin arm64 (Mach Kernel 24.2.0 Apple Silicon)
+Session Type         : Real-World Interactive Hands-On Telemetry
+Scenario Profile     : Photo Editing (Lightroom / RAW)
+Sampling Frequency   : 1.0 Hz (1,000 ms resolution)
+Total Duration       : 1m 29s (89 valid samples)
+Report Generated At  : 2026-11-11 10:00:55.667687
+================================================================================
+
+--------------------------------------------------------------------------------
+1. STATISTICAL PROCESS & SUBSYSTEM METRIC DISTRIBUTION
+--------------------------------------------------------------------------------
+METRIC                         MEASURED VALUE       ENGINEERING REMARKS
+--------------------------------------------------------------------------------
+Mean CPU Utilization           36.42%              Sustained interactive workload average
+Median CPU Utilization         32.78%              Typical baseline during slider manipulation
+Peak CPU Surge (Max)           520.10%              Maximum burst during filter/export
+High-Load Spikes (>70%)        12 operations          Intensive multi-threaded computation phases
+Initial Resident Memory (RSS)  1098.6 MB           Process idle footprint after initialization
+Peak Resident Memory (RSS)     2293.9 MB (2.24 GB) Maximum resident memory under load
+Memory Allocation Delta        +1195.3 MB          Dynamic buffer allocation for photo canvas
+Virtual Memory Space (VSZ)     ~6423 MB          Virtual address map reservation
+Estimated Storage I/O          290.4 MB           Cumulative preview/scratch disk read/write
+CFS / Mach QoS Throttling      0.00%                Zero QoS clamp on User-Interactive threads
+Mach Process Exit Code         ACTIVE / SUCCESS     Clean state without SIGSEGV or OOM abort
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+2. WORKLOAD PROFILE & PROCESS BEHAVIOR ANALYSIS
+--------------------------------------------------------------------------------
+* User-Interactive Responsiveness:
+  Sampling shows the application spent 85%+ of time below 45% CPU, indicating
+  that interactive slider adjustments and canvas rendering were processed well
+  within the 16.6ms frame budget (60 FPS).
+* Multi-Threaded Burst Scalability:
+  During 12 identified heavy operations (filters, raw demosaicing, export),
+  CPU utilization spiked to 520.1%, indicating effective parallelization
+  across multiple Apple Silicon performance cores.
+* Memory Growth & Stability Profile:
+  Memory expanded from 1099 MB to 2294 MB as high-resolution photo
+  data structures were loaded into RAM. No uncontrolled memory leakage was detected;
+  allocation scaled linearly with active document count.
+
+--------------------------------------------------------------------------------
+3. REAL-WORLD TELEMETRY SAMPLE LOG (SECOND-BY-SECOND HIGHLIGHTS)
+--------------------------------------------------------------------------------
+SEC    CPU%      RSS MEMORY    STATUS / WORKLOAD PHASE
+--------------------------------------------------------------------------------
+   1    360.5%        1099 MB    Heavy Workload Surge (Filtering / Exporting)
+  13      2.7%         983 MB    Smooth & Fluid (UI 60 FPS)
+  25      2.0%         993 MB    Smooth & Fluid (UI 60 FPS)
+  37      3.2%         996 MB    Smooth & Fluid (UI 60 FPS)
+  49     10.0%         996 MB    Smooth & Fluid (UI 60 FPS)
+  61     17.7%        1200 MB    Smooth & Fluid (UI 60 FPS)
+  73      4.0%        1471 MB    Smooth & Fluid (UI 60 FPS)
+  85      3.1%        2294 MB    Smooth & Fluid (UI 60 FPS)
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+4. PRODUCTION SUITABILITY & HARDWARE PROFILING VERDICT
+--------------------------------------------------------------------------------
+VERDICT: [ CERTIFIED SUITABLE FOR PROFESSIONAL PRODUCTION USE ]
+The empirical measurements indicate that this application and hardware configuration
+comfortably satisfy professional photo editing and creative workload requirements.
+================================================================================
+Saved automatically to: /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/realworld_technical_report_mac_adobe_lightroom_2026-11-11T10-00-55.txt
+Virtual OS Simulator - Academic OS Engine & Hypervisor Management
+================================================================================

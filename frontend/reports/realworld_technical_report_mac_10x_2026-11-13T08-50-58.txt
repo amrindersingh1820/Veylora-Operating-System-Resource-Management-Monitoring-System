@@ -1,0 +1,74 @@
+================================================================================
+VIRTUAL OS SIMULATOR — REAL-WORLD WORKLOAD TECHNICAL TELEMETRY REPORT
+================================================================================
+Application ID       : mac_10x
+Display Name         : 10x
+Executable Path      : /Applications/10x.app/Contents/MacOS/10x
+Resolved PID         : 48708
+Target Architecture  : Darwin arm64 (Mach Kernel 24.2.0 Apple Silicon)
+Session Type         : Real-World Interactive Hands-On Telemetry
+Scenario Profile     : Software Development (VS Code / Xcode)
+Sampling Frequency   : 1.0 Hz (1,000 ms resolution)
+Total Duration       : 0m 23s (23 valid samples)
+Report Generated At  : 2026-11-13 08:50:58.653050
+================================================================================
+
+--------------------------------------------------------------------------------
+1. STATISTICAL PROCESS & SUBSYSTEM METRIC DISTRIBUTION
+--------------------------------------------------------------------------------
+METRIC                         MEASURED VALUE       ENGINEERING REMARKS
+--------------------------------------------------------------------------------
+Mean CPU Utilization           24.18%              Sustained interactive workload average
+Median CPU Utilization         21.76%              Typical baseline during slider manipulation
+Peak CPU Surge (Max)           89.46%              Maximum burst during filter/export
+High-Load Spikes (>70%)        3 operations          Intensive multi-threaded computation phases
+Initial Resident Memory (RSS)  108.1 MB           Process idle footprint after initialization
+Peak Resident Memory (RSS)     133.0 MB (0.13 GB) Maximum resident memory under load
+Memory Allocation Delta        +24.9 MB          Dynamic buffer allocation for photo canvas
+Virtual Memory Space (VSZ)     ~372 MB          Virtual address map reservation
+Estimated Storage I/O          73.5 MB           Cumulative preview/scratch disk read/write
+CFS / Mach QoS Throttling      0.00%                Zero QoS clamp on User-Interactive threads
+Mach Process Exit Code         ACTIVE / SUCCESS     Clean state without SIGSEGV or OOM abort
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+2. WORKLOAD PROFILE & PROCESS BEHAVIOR ANALYSIS
+--------------------------------------------------------------------------------
+* User-Interactive Responsiveness:
+  Sampling shows the application spent 85%+ of time below 45% CPU, indicating
+  that interactive slider adjustments and canvas rendering were processed well
+  within the 16.6ms frame budget (60 FPS).
+* Multi-Threaded Burst Scalability:
+  During 3 identified heavy operations (filters, raw demosaicing, export),
+  CPU utilization spiked to 89.5%, indicating effective parallelization
+  across multiple Apple Silicon performance cores.
+* Memory Growth & Stability Profile:
+  Memory expanded from 108 MB to 133 MB as high-resolution photo
+  data structures were loaded into RAM. No uncontrolled memory leakage was detected;
+  allocation scaled linearly with active document count.
+
+--------------------------------------------------------------------------------
+3. REAL-WORLD TELEMETRY SAMPLE LOG (SECOND-BY-SECOND HIGHLIGHTS)
+--------------------------------------------------------------------------------
+SEC    CPU%      RSS MEMORY    STATUS / WORKLOAD PHASE
+--------------------------------------------------------------------------------
+   1     26.9%         108 MB    Smooth & Fluid (UI 60 FPS)
+   4      7.5%         120 MB    Smooth & Fluid (UI 60 FPS)
+   7     41.9%         133 MB    Smooth & Fluid (UI 60 FPS)
+  10     16.1%         131 MB    Smooth & Fluid (UI 60 FPS)
+  13     15.7%         130 MB    Smooth & Fluid (UI 60 FPS)
+  16     20.6%         124 MB    Smooth & Fluid (UI 60 FPS)
+  19      1.5%          95 MB    Smooth & Fluid (UI 60 FPS)
+  22     88.8%          80 MB    Heavy Workload Surge (Filtering / Exporting)
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+4. PRODUCTION SUITABILITY & HARDWARE PROFILING VERDICT
+--------------------------------------------------------------------------------
+VERDICT: [ CERTIFIED SUITABLE FOR PROFESSIONAL PRODUCTION USE ]
+The empirical measurements indicate that this application and hardware configuration
+comfortably satisfy professional photo editing and creative workload requirements.
+================================================================================
+Saved automatically to: /Users/amrindersingh/Downloads/VirtualOS_Simulator/frontend/reports/realworld_technical_report_mac_10x_2026-11-13T08-50-58.txt
+Virtual OS Simulator - Academic OS Engine & Hypervisor Management
+================================================================================
