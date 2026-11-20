@@ -1,3 +1,4 @@
+
 #include "memory.h"
 #include "util.h"
 #include <stdio.h>
@@ -68,7 +69,12 @@ static void place_all(MemStrategy s, const int *blocks, int nb, const Process *p
 
 int mem_run(MemStrategy s, const int *blocks, int nb, const Process *procs, int n, MemResult *out)
 {
-    if (nb < 1 || nb > MAX_BLOCKS || n < 1 || n > MAX_PROC || s < 0 || s >= MEM_COUNT) return -1;
+    if (blocks == NULL || procs == NULL || out == NULL ||
+        nb < 1 || nb > MAX_BLOCKS ||
+        n < 1 || n > MAX_PROC ||
+        s < 0 || s >= MEM_COUNT) {
+        return -1;
+    }
     if (s != MEM_AUTO) {
         place_all(s, blocks, nb, procs, n, out);
         snprintf(out->reason, sizeof out->reason, "Manually selected %s.", NAMES[s]);
