@@ -4,6 +4,699 @@
  * enforcement via virtio-serial RPC, SQLite persistence, and audit logging.
  */
 
+
+
+/*
+ * ============================================================================
+ * MODULE: VIRTUAL OS RESOURCE MANAGEMENT
+ * FILE:   resource_manager.c
+ * ============================================================================
+ *
+ * 1. MODULE OVERVIEW
+ * ------------------
+ *
+ * This module implements the resource management layer of the Virtual OS
+ * Simulator. It provides the host-side interface for configuring virtual
+ * machine hardware resources, communicating with guest agents, managing
+ * application resource groups, applying resource limits, and recording
+ * enforcement activity.
+ *
+ * The resource manager acts as an integration layer between the virtualization
+ * subsystem, the guest agent communication interface, the monitoring system,
+ * and the SQLite persistence layer.
+ *
+ * Its primary responsibility is to translate resource management operations
+ * requested by the application or virtualization layers into structured
+ * requests that can be processed by the guest agent.
+ *
+ * The module also maintains records of resource groups, requested limits,
+ * enforcement results, and audit events so that resource management activity
+ * can be inspected after operations have completed.
+ *
+ * 2. PRIMARY RESPONSIBILITIES
+ * ---------------------------
+ *
+ * The resource manager is responsible for the following operations:
+ *
+ * - Initializing and shutting down its database connection.
+ * - Creating and maintaining resource management database tables.
+ * - Establishing communication with guest agents through Unix domain sockets.
+ * - Serializing resource requests into the agent protocol format.
+ * - Sending requests and receiving responses from guest agents.
+ * - Translating agent response codes into ResourceResult values.
+ * - Detecting guest resource management capabilities.
+ * - Creating and removing application resource groups.
+ * - Configuring CPU allocation and CPU scheduling weight.
+ * - Configuring memory limits for resource groups.
+ * - Configuring process count limits.
+ * - Configuring disk input/output bandwidth limits.
+ * - Attaching processes to resource groups.
+ * - Retrieving resource group status from the guest agent.
+ * - Maintaining resource group records in SQLite.
+ * - Persisting resource limit information.
+ * - Recording enforcement operations in the audit log.
+ * - Updating virtual machine CPU and memory configuration.
+ *
+ * 3. MODULE ARCHITECTURE
+ * ----------------------
+ *
+ * The resource management workflow is divided into several logical layers.
+ *
+ * A. Public Resource Management API
+ *
+ *    The public API consists of functions declared in resource_manager.h.
+ *    These functions are called by other modules that require resource
+ *    configuration or enforcement operations.
+ *
+ *    Examples include:
+ *
+ *      resource_manager_create_group()
+ *      resource_manager_set_cpu_limit()
+ *      resource_manager_set_cpu_weight()
+ *      resource_manager_set_memory_limit()
+ *      resource_manager_set_process_limit()
+ *      resource_manager_set_io_limit()
+ *      resource_manager_attach_process()
+ *      resource_manager_get_group_status()
+ *      resource_manager_remove_group()
+ *
+ *    These functions prepare operation-specific requests and pass them to
+ *    the guest agent through the RPC communication interface.
+ *
+ * B. Guest Communication Layer
+ *
+ *    The communication layer is implemented by resource_manager_rpc().
+ *
+ *    It establishes a connection to the guest agent using a Unix domain
+ *    stream socket, serializes the request, sends the request, waits for
+ *    the response, and converts the returned status into a ResourceResult.
+ *
+ *    The socket-based interface provides a communication boundary between
+ *    the host-side resource manager and the guest-side agent.
+ *
+ * C. Persistence Layer
+ *
+ *    SQLite is used to maintain resource management information.
+ *
+ *    The database stores resource groups, configured resource limits,
+ *    enforcement events, and related operation details.
+ *
+ *    Database access is protected by the resource manager mutex.
+ *
+ * D. Audit Layer
+ *
+ *    The audit logging interface records resource management operations.
+ *
+ *    Each audit entry can include the VM identifier, resource group,
+ *    operation name, requested value, applied value, result status,
+ *    verification state, error message, and timestamp.
+ *
+ * 4. HOST-TO-GUEST COMMUNICATION
+ * ------------------------------
+ *
+ * Guest communication is one of the central responsibilities of this module.
+ *
+ * The host-side resource manager does not directly perform every guest
+ * resource operation. Instead, it sends structured requests to the guest
+ * agent, which is responsible for processing the requested operation.
+ *
+ * The communication process follows these general stages:
+ *
+ * 1. A resource management API receives an operation request.
+ * 2. The API validates the required identifiers and arguments.
+ * 3. An AgentResourceRequest structure is initialized.
+ * 4. The protocol version and VM identifier are populated.
+ * 5. The requested operation is assigned to the request.
+ * 6. Operation-specific fields are populated.
+ * 7. resource_manager_rpc() is called.
+ * 8. The RPC function locates an available agent socket.
+ * 9. A Unix domain stream socket is created.
+ * 10. The connection to the guest agent is established.
+ * 11. The request is serialized using the agent protocol serializer.
+ * 12. A newline terminator is appended to the serialized request.
+ * 13. The request is transmitted through the socket.
+ * 14. The host waits for a response using poll().
+ * 15. Response data is read from the socket.
+ * 16. The socket is closed after receiving the response.
+ * 17. The response is deserialized into AgentResourceResponse.
+ * 18. The guest agent status is translated into ResourceResult.
+ * 19. The calling API processes the returned result.
+ *
+ * The RPC function checks two possible socket locations:
+ *
+ *    /tmp/vos_agent_<vm_id>.sock
+ *    /tmp/virtualos_<vm_id>_agent.sock
+ *
+ * The first available socket path is used for the connection attempt.
+ *
+ * If neither socket is available, the function reports a communication
+ * failure.
+ *
+ * 5. REQUEST AND RESPONSE HANDLING
+ * --------------------------------
+ *
+ * Communication requests use AgentResourceRequest, while responses use
+ * AgentResourceResponse.
+ *
+ * The request structure contains fields such as:
+ *
+ * - Protocol version.
+ * - Request identifier.
+ * - Virtual machine identifier.
+ * - Operation type.
+ * - Resource group identifier.
+ * - CPU configuration values.
+ * - Memory configuration values.
+ * - Process count limits.
+ * - Disk I/O limits.
+ * - Process identifiers.
+ * - Expected process start time.
+ *
+ * Only the fields required by a particular operation are populated by
+ * the corresponding public API.
+ *
+ * The response structure provides operation status, error information,
+ * verification information, and applied resource values.
+ *
+ * The RPC layer maps agent status codes to resource manager result codes.
+ * This allows callers to handle communication failures, unsupported
+ * operations, permission errors, missing groups, and verification failures
+ * through a consistent result interface.
+ *
+ * 6. DATABASE MANAGEMENT
+ * ----------------------
+ *
+ * SQLite provides persistent storage for resource management metadata.
+ *
+ * The database connection is maintained through the following internal
+ * state:
+ *
+ *    s_rm_db
+ *    s_rm_db_path
+ *    s_rm_lock
+ *
+ * s_rm_db stores the active SQLite connection.
+ *
+ * s_rm_db_path stores the configured database path. The default path is
+ * virtual_os.db.
+ *
+ * s_rm_lock protects database operations and shared database state.
+ *
+ * The database initialization process:
+ *
+ * 1. Acquires the resource manager mutex.
+ * 2. Updates the configured database path when supplied.
+ * 3. Opens the SQLite database when necessary.
+ * 4. Configures the SQLite busy timeout.
+ * 5. Enables Write-Ahead Logging mode.
+ * 6. Creates the required resource management tables.
+ * 7. Releases the mutex.
+ *
+ * The busy timeout is configured to 2000 milliseconds.
+ *
+ * 7. DATABASE TABLES
+ * ------------------
+ *
+ * The resource manager maintains three primary tables.
+ *
+ * A. resource_groups
+ *
+ *    This table stores information about resource groups associated with
+ *    virtual machines.
+ *
+ *    Important fields include:
+ *
+ *    - id: Internal database identifier.
+ *    - vm_id: Virtual machine associated with the group.
+ *    - group_id: Identifier of the resource group.
+ *    - group_name: Human-readable group name.
+ *    - cgroup_path: Recorded cgroup path.
+ *    - status: Current recorded group status.
+ *    - created_at: Group creation timestamp.
+ *    - updated_at: Last recorded update timestamp.
+ *
+ *    A unique constraint on vm_id and group_id prevents duplicate group
+ *    records for the same virtual machine.
+ *
+ *    An index on vm_id supports VM-specific group lookups.
+ *
+ * B. enforcement_events
+ *
+ *    This table stores resource enforcement audit records.
+ *
+ *    Important fields include:
+ *
+ *    - id: Internal event identifier.
+ *    - vm_id: Virtual machine associated with the operation.
+ *    - group_id: Resource group involved in the operation.
+ *    - operation: Name of the requested operation.
+ *    - requested_value: Resource value requested by the caller.
+ *    - applied_value: Resource value reported as applied.
+ *    - status: Operation result.
+ *    - verified: Verification indicator.
+ *    - error_message: Recorded error information.
+ *    - timestamp: Time at which the event was recorded.
+ *
+ *    An index on VM, group, and timestamp supports event lookups.
+ *
+ * C. resource_limits
+ *
+ *    This table stores resource limit information.
+ *
+ *    It includes fields for:
+ *
+ *    - VM identifier.
+ *    - Resource group identifier.
+ *    - Process identifier.
+ *    - CPU quota.
+ *    - CPU period.
+ *    - CPU core allocation.
+ *    - CPU scheduling weight.
+ *    - Maximum memory allocation.
+ *    - Maximum process count.
+ *    - Read bandwidth.
+ *    - Write bandwidth.
+ *    - Verification state.
+ *    - Enforcement status.
+ *    - Additional operation details.
+ *    - Creation and update timestamps.
+ *
+ *    This table provides a persistent record of resource limit settings
+ *    submitted through the resource management interface.
+ *
+ * 8. RESOURCE GROUP MANAGEMENT
+ * ----------------------------
+ *
+ * Resource groups provide a logical mechanism for organizing and applying
+ * resource limits to processes running inside a virtual machine.
+ *
+ * The resource manager provides operations to create, inspect, enumerate,
+ * and remove resource groups.
+ *
+ * resource_manager_create_group():
+ *
+ *    - Validates the VM and group identifiers.
+ *    - Builds an AGENT_OP_CREATE_GROUP request.
+ *    - Sends the request to the guest agent.
+ *    - Records the group information in SQLite.
+ *    - Assigns ACTIVE or PENDING status based on the RPC result.
+ *    - Records the operation in the audit log.
+ *
+ * resource_manager_get_group_status():
+ *
+ *    - Builds an AGENT_OP_GET_GROUP_STATUS request.
+ *    - Sends the request to the guest agent.
+ *    - Copies the returned status into the output structure.
+ *    - Preserves the verification indicator.
+ *
+ * resource_manager_list_groups():
+ *
+ *    - Queries the SQLite resource_groups table.
+ *    - Filters records using the supplied VM identifier.
+ *    - Excludes groups recorded with DELETED status.
+ *    - Copies group identifiers into the caller-provided output array.
+ *
+ * resource_manager_remove_group():
+ *
+ *    - Builds an AGENT_OP_REMOVE_GROUP request.
+ *    - Sends the request to the guest agent.
+ *    - Updates the recorded group status to DELETED.
+ *    - Records the removal operation in the audit log.
+ *
+ * 9. CPU RESOURCE MANAGEMENT
+ * --------------------------
+ *
+ * CPU configuration is exposed through separate operations for CPU quota
+ * and CPU scheduling weight.
+ *
+ * A. CPU quota
+ *
+ *    resource_manager_set_cpu_limit() accepts:
+ *
+ *    - VM identifier.
+ *    - Resource group identifier.
+ *    - Requested CPU core allocation.
+ *    - CPU period in microseconds.
+ *
+ *    If the supplied period is not positive, the function uses a default
+ *    period of 100000 microseconds.
+ *
+ *    The CPU quota is calculated using:
+ *
+ *        cpu_quota_us = cpu_cores * cpu_period_us
+ *
+ *    A positive CPU core value produces a calculated quota. Otherwise,
+ *    the request uses -1 as the quota value.
+ *
+ *    The function sends the request to the guest agent, records the
+ *    resource limit information in SQLite, and creates an audit event.
+ *
+ * B. CPU scheduling weight
+ *
+ *    resource_manager_set_cpu_weight() sends an AGENT_OP_SET_CPU_WEIGHT
+ *    request containing the requested CPU weight.
+ *
+ *    The returned applied weight is included in the audit information.
+ *
+ * 10. MEMORY RESOURCE MANAGEMENT
+ * ------------------------------
+ *
+ * Memory resource management is implemented through
+ * resource_manager_set_memory_limit().
+ *
+ * The function accepts a memory limit expressed in bytes.
+ *
+ * It prepares an AGENT_OP_SET_MEMORY_LIMIT request and sends it to the
+ * guest agent.
+ *
+ * The request includes the VM identifier, group identifier, and requested
+ * maximum memory allocation.
+ *
+ * The returned response may contain the applied memory limit and current
+ * memory usage.
+ *
+ * The function records the requested memory limit, verification state,
+ * and enforcement status in SQLite.
+ *
+ * It also records requested and reported applied values in the audit log.
+ *
+ * 11. PROCESS COUNT MANAGEMENT
+ * ----------------------------
+ *
+ * Process count management is provided by resource_manager_set_process_limit().
+ *
+ * This API accepts a maximum process count and sends an
+ * AGENT_OP_SET_PIDS_LIMIT request to the guest agent.
+ *
+ * The operation is associated with a particular VM and resource group.
+ *
+ * The function records the requested process limit and the response
+ * verification information in the resource_limits table.
+ *
+ * The audit event includes the requested maximum process count and the
+ * reported applied process count.
+ *
+ * 12. DISK I/O RESOURCE MANAGEMENT
+ * --------------------------------
+ *
+ * Disk input/output bandwidth management is implemented through
+ * resource_manager_set_io_limit().
+ *
+ * The API accepts separate read and write bandwidth limits.
+ *
+ * Both values are expressed in bytes per second.
+ *
+ * The function prepares an AGENT_OP_SET_IO_LIMIT request and transmits
+ * the requested limits to the guest agent.
+ *
+ * The response may contain the applied read and write bandwidth values.
+ *
+ * The resource limit record and corresponding audit event are then
+ * persisted.
+ *
+ * 13. PROCESS ATTACHMENT
+ * ---------------------
+ *
+ * The resource manager supports attaching a process to a resource group.
+ *
+ * resource_manager_attach_process_with_identity() accepts:
+ *
+ * - VM identifier.
+ * - Resource group identifier.
+ * - Process identifier.
+ * - Expected process start time.
+ *
+ * The expected start time is included in the request so that the guest
+ * agent can use process identity information when handling the operation.
+ *
+ * The operation is sent using AGENT_OP_ATTACH_PROCESS.
+ *
+ * The result and reported attached process count are included in the
+ * audit event.
+ *
+ * resource_manager_attach_process() provides a simpler interface that
+ * invokes the identity-aware function with an expected start time of zero.
+ *
+ * 14. ENFORCEMENT STATUS
+ * ----------------------
+ *
+ * The internal get_enforcement_status_str() helper converts resource
+ * operation results into persistent enforcement status strings.
+ *
+ * It distinguishes three general states:
+ *
+ * UNSUPPORTED:
+ *    The requested operation is not supported by the guest kernel,
+ *    host hypervisor, platform, or hardware.
+ *
+ * FAILED:
+ *    The operation returned a result other than RESOURCE_SUCCESS.
+ *
+ * VERIFIED:
+ *    The operation succeeded and the response indicates verification.
+ *
+ * APPLIED:
+ *    The operation succeeded but the response does not indicate verification.
+ *
+ * These states help distinguish successful operations from unsupported
+ * operations and operations that could not be completed.
+ *
+ * 15. AUDIT LOGGING
+ * -----------------
+ *
+ * resource_manager_audit_log() provides a common interface for recording
+ * resource management operations.
+ *
+ * It acquires the resource manager mutex and ensures that the database
+ * connection is available.
+ *
+ * It then inserts an event into enforcement_events using a prepared
+ * SQLite statement.
+ *
+ * The audit record contains:
+ *
+ * - VM identifier.
+ * - Resource group identifier.
+ * - Operation name.
+ * - Requested resource value.
+ * - Applied resource value.
+ * - Operation status.
+ * - Verification indicator.
+ * - Error message.
+ * - Timestamp in milliseconds.
+ *
+ * Prepared statements are used for inserting audit records.
+ *
+ * The function returns zero when the insert succeeds and -1 when database
+ * initialization or statement execution fails.
+ *
+ * 16. VIRTUAL MACHINE HARDWARE CONFIGURATION
+ * ------------------------------------------
+ *
+ * resource_manager_set_vm_hardware() provides an interface for updating
+ * a virtual machine's configured CPU count and memory allocation.
+ *
+ * The function performs the following operations:
+ *
+ * 1. Validates the VM identifier.
+ * 2. Checks the requested CPU count against VM_MAX_CPUS.
+ * 3. Checks the requested memory against VM_MIN_MEM_MB and 65536 MB.
+ * 4. Retrieves the existing VM configuration using vm_db_get().
+ * 5. Updates the CPU count and memory configuration.
+ * 6. Saves the updated configuration using vm_db_save().
+ * 7. Reports that a restart is required.
+ * 8. Records the hardware configuration operation in the audit log.
+ *
+ * The function records configuration changes but does not itself perform
+ * a VM restart.
+ *
+ * 17. THREAD SAFETY AND SHARED STATE
+ * ----------------------------------
+ *
+ * The resource manager maintains shared state for its database connection,
+ * configured database path, and request sequence counter.
+ *
+ * The pthread mutex s_rm_lock is used to protect database connection
+ * initialization, shutdown, and database operations.
+ *
+ * Database-related functions acquire the mutex before accessing shared
+ * SQLite state and release it after completing their operation.
+ *
+ * Callers should use the public resource manager APIs instead of directly
+ * modifying the internal database connection or global state.
+ *
+ * 18. ERROR HANDLING
+ * ------------------
+ *
+ * Resource operations can fail for several reasons:
+ *
+ * - Missing or invalid operation parameters.
+ * - Missing guest agent socket.
+ * - Socket creation failure.
+ * - Connection failure.
+ * - Request serialization failure.
+ * - Request transmission failure.
+ * - Response timeout.
+ * - Empty or invalid response.
+ * - Guest agent communication failure.
+ * - Unsupported resource management operation.
+ * - Permission denial.
+ * - Missing resource group or process.
+ * - Resource verification failure.
+ * - Database initialization or query failure.
+ * - Invalid virtual machine hardware configuration.
+ *
+ * The ResourceResult enumeration provides a common result interface
+ * for reporting these conditions.
+ *
+ * resource_result_str() converts ResourceResult values into readable
+ * string representations for diagnostics and audit information.
+ *
+ * 19. TIME AND REQUEST IDENTIFICATION
+ * -----------------------------------
+ *
+ * get_time_ms() returns the current wall-clock time in milliseconds.
+ *
+ * The timestamp is calculated from CLOCK_REALTIME using seconds and
+ * nanoseconds.
+ *
+ * The resource manager also maintains s_req_seq as a request sequence
+ * counter.
+ *
+ * Public resource operations use timestamps and the sequence counter
+ * when constructing request identifiers.
+ *
+ * These identifiers help distinguish individual agent requests.
+ *
+ * 20. DEPENDENCIES AND MODULE INTEGRATION
+ * --------------------------------------
+ *
+ * This source file integrates with several project components:
+ *
+ * resource_manager.h:
+ *    Declares resource manager APIs, result types, and resource structures.
+ *
+ * vm_monitor.h:
+ *    Provides the monitoring database schema integration interface.
+ *
+ * vm_config.h:
+ *    Provides virtual machine configuration definitions and hardware limits.
+ *
+ * vm_manager.h:
+ *    Provides VM configuration retrieval and persistence operations.
+ *
+ * agent_protocol.h:
+ *    Defines the request and response structures, operation codes,
+ *    protocol version, and serialization interfaces.
+ *
+ * sqlite3.h:
+ *    Provides SQLite database operations and prepared statement interfaces.
+ *
+ * pthread:
+ *    Provides mutex synchronization for shared resource manager state.
+ *
+ * Unix socket and polling interfaces:
+ *    Provide the local communication mechanism used to contact guest agents.
+ *
+ * 21. DESIGN CONSIDERATIONS
+ * -------------------------
+ *
+ * The resource manager separates operation preparation from guest-side
+ * execution. Public APIs construct requests while the RPC layer handles
+ * communication and response translation.
+ *
+ * Persistence and audit logging provide a record of requested operations
+ * and their reported outcomes.
+ *
+ * Resource group records are scoped by VM identifier so that the same
+ * group identifier can be associated with different virtual machines.
+ *
+ * Resource limits are recorded independently for different resource types.
+ *
+ * Unsupported operations are represented explicitly rather than being
+ * treated as successful enforcement.
+ *
+ * Verification information is preserved where the guest response provides it.
+ *
+ * Database operations use prepared statements to bind values rather than
+ * constructing SQL statements from user-supplied identifiers.
+ *
+ * The module uses a common result type so that callers can handle different
+ * resource management failures consistently.
+ *
+ * 22. IMPORTANT IMPLEMENTATION BOUNDARIES
+ * ---------------------------------------
+ *
+ * This file implements the host-side resource management interface.
+ *
+ * It constructs and sends requests to the guest agent; the actual guest-side
+ * resource operation is performed by the agent implementation.
+ *
+ * The resource manager records reported outcomes but does not independently
+ * inspect every guest kernel resource controller.
+ *
+ * The module updates VM configuration records when hardware settings change.
+ * The caller remains responsible for handling the restart requirement.
+ *
+ * The RPC interface depends on the guest agent being available at one of
+ * the supported Unix domain socket paths.
+ *
+ * Database persistence records the state reported by the resource manager
+ * and guest agent. A database record alone should not be interpreted as
+ * proof that a resource limit is currently active in the guest kernel.
+ *
+ * 23. MAINTENANCE GUIDELINES
+ * --------------------------
+ *
+ * When adding a new resource management operation:
+ *
+ * - Define the corresponding operation code in the agent protocol.
+ * - Add or update the request fields required by the operation.
+ * - Implement the guest-side operation in the agent.
+ * - Add a host-side public API in the resource manager.
+ * - Validate required identifiers and input values.
+ * - Populate the protocol version and VM identifier.
+ * - Send the request using resource_manager_rpc().
+ * - Translate and propagate the returned result.
+ * - Persist relevant resource information when required.
+ * - Record the operation using resource_manager_audit_log().
+ * - Update the public header declarations.
+ *
+ * When changing database structures:
+ *
+ * - Update the schema initialization logic.
+ * - Preserve compatibility with existing database records where required.
+ * - Review indexes and uniqueness constraints.
+ * - Check all queries that read or update the affected tables.
+ *
+ * When changing communication behavior:
+ *
+ * - Preserve the request serialization format.
+ * - Preserve the response deserialization contract.
+ * - Handle socket and polling failures.
+ * - Ensure sockets are closed on failure paths.
+ * - Preserve meaningful ResourceResult error codes.
+ *
+ * 24. SUMMARY
+ * ------------
+ *
+ * The resource manager is the host-side coordination component for virtual
+ * machine and application resource configuration.
+ *
+ * It provides a unified API for guest-agent communication, resource group
+ * operations, CPU and memory configuration, process limits, disk I/O limits,
+ * process attachment, VM hardware configuration, database persistence,
+ * and enforcement audit logging.
+ *
+ * By separating public resource APIs, guest communication, persistence,
+ * and audit logging, the module provides a structured interface for the
+ * Virtual OS Simulator's resource management subsystem.
+ *
+ * ============================================================================
+ * END OF RESOURCE MANAGER MODULE DOCUMENTATION
+ * ============================================================================
+ */
+
 #include "resource_manager.h"
 #include "vm_monitor.h"
 #include "../virtualization/vm_config.h"
