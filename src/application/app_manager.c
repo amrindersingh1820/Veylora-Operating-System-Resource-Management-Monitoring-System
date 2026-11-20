@@ -276,7 +276,26 @@ static sqlite3 *get_db(void)
 }
 
 /* ------------------------------------------------------------------ Application Registry */
-
+/*
+ * Registers a new application for a specific virtual machine.
+ *
+ * Each application is identified by its app_id within the scope of
+ * a VM, allowing different VMs to register applications independently.
+ *
+ * Before inserting the record, the function validates the required
+ * parameters, checks the application identifier for unsafe characters,
+ * and ensures that the executable path is absolute and contains no
+ * directory traversal sequences.
+ *
+ * The application metadata and its default resource profile are then
+ * stored in the SQLite application registry.
+ *
+ * Returns:
+ *   APP_SUCCESS            - Application registered successfully.
+ *   APP_ERR_INVALID_PARAM  - Required parameters or identifiers are invalid.
+ *   APP_ERR_ALREADY_EXISTS - Application is already registered for the VM.
+ *   APP_ERR_DB             - Database operation failed.
+ */
 AppResult app_manager_register_app(const char *vm_id,
                                    const char *app_id,
                                    const char *name,
