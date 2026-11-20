@@ -66,7 +66,17 @@ int db_open(const char *path)
     return run_sql(SCHEMA);
 }
 
-void db_close(void) { if (DB) { sqlite3_close(DB); DB = NULL; } }
+void db_close(void)
+{
+    if (DB) {
+        int rc = sqlite3_close(DB);
+        if (rc == SQLITE_OK) {
+            DB = NULL;
+        } else {
+            set_err("close");
+        }
+    }
+}
 
 /* "1,2,3,4" <-> int[NRES] */
 static void pack_vec(const int *v, char *out, size_t n)
